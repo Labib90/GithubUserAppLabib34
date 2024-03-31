@@ -12,7 +12,7 @@ class UserAdapter: RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
     private val list = ArrayList<User>()
 
-    private var onItemClickCallbackL: OnItemClickCallback? = null
+    private var onItemClickCallback: OnItemClickCallback? = null
 
     fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback){
         this.onItemClickCallback = onItemClickCallback
@@ -27,7 +27,7 @@ class UserAdapter: RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
     inner class UserViewHolder(val binding: ItemUserBinding) : RecyclerView.ViewHolder(binding.root){
         fun bind(user: User){
             binding.root.setOnClickListener{
-                setOnItemClickCallback(?.onItemClicked(user)
+                onItemClickCallback?.onItemClicked(user)
             }
 
             binding.apply {

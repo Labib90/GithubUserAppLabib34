@@ -8,8 +8,7 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.githubuserapplabib.databinding.ActivityMainBinding
-import com.example.githubuserapplabib.MainViewModel
-import com.example.githubuserapplabib.model.ResponseUserDetail
+import com.example.githubuserapplabib.detail.UserDetailActivity
 import com.example.githubuserapplabib.model.User
 
 class MainActivity : AppCompatActivity() {
@@ -29,7 +28,8 @@ class MainActivity : AppCompatActivity() {
         adapter.setOnItemClickCallback(object : UserAdapter.OnItemClickCallback{
             override fun onItemClicked(data: User) {
                 Intent(this@MainActivity, UserDetailActivity::class.java).also {
-                    it.putExtra()
+                    it.putExtra(UserDetailActivity.EXTRA_USERNAME, data.login)
+                    startActivity(it)
                 }
             }
         })
