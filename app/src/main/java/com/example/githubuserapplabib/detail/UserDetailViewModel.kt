@@ -11,10 +11,11 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class UserDetailViewModel : ViewModel(){
-    val user = MutableLiveData<ResponseUserDetail>()
+    private val _user = MutableLiveData<ResponseUserDetail>()
+    val user:LiveData<ResponseUserDetail> = _user
 
-    fun setUserDetail(username: String){
-        ClientRetrofit.apiInstance
+    fun setUserDetail(username: String?){
+        ClientRetrofit.getApiService()
             .getUserDetail(username)
             .enqueue(object: Callback<ResponseUserDetail>{
                 override fun onResponse(
@@ -22,17 +23,16 @@ class UserDetailViewModel : ViewModel(){
                     response: Response<ResponseUserDetail>
                 ) {
                     if( response.isSuccessful){
-                        user.postValue(response.body())
+                        _user.postValue(response.body())
                     }
                 }
 
                 override fun onFailure(call: Call<ResponseUserDetail>, t: Throwable) {
-                    Log.d("Failure", t.message)
+                    Log.d("Failure", t.message.toString())
                 }
 
             })
     }
-    fun getUserDetail(): LiveData<ResponseUserDetail> {
-        return user
-    }
+
+
 }

@@ -38,6 +38,12 @@ class MainActivity : AppCompatActivity() {
             ViewModelProvider.NewInstanceFactory()
         ).get(MainViewModel::class.java)
 
+        viewModel.listUsers.observe(this, {
+            if (it!=null){
+                adapter.setList(it)
+                showLoading(false)
+            }
+        })
         binding.apply {
             rvUser.layoutManager = LinearLayoutManager(this@MainActivity)
             rvUser.setHasFixedSize(true)
@@ -56,12 +62,7 @@ class MainActivity : AppCompatActivity() {
                 return@setOnKeyListener false
             }
         }
-        viewModel.getSearchUsers().observe(this, {
-            if (it!=null){
-                adapter.setList(it)
-                showLoading(false)
-            }
-        })
+
     }
     private fun searchUser(){
         binding.apply{

@@ -1,29 +1,26 @@
 package com.example.githubuserapplabib.detail
 
 import android.content.Context
+import android.os.Bundle
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.githubuserapplabib.R
 
-class SectionPagerAdapter(private val mCtx: Context, fm: FragmentManager) : FragmentPagerAdapter (fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-
-    @StringRes
-    private val TAB_TITLES = intArrayOf(R.string.tab_1, R.string.tab_2)
-
-    override fun getCount(): Int = 2
-
-    override fun getItem(position: Int): Fragment {
-       var fragment: Fragment? = null
-        when(position){
-            0 -> fragment = FollowersFragment
-            1 -> fragment = FollowingFragment
+class SectionsPagerAdapter(activity: AppCompatActivity) : FragmentStateAdapter(activity) {
+    var username: String = ""
+    override fun createFragment(position: Int): Fragment {
+        val fragment = FollowFragment()
+        fragment.arguments = Bundle().apply {
+            putInt(FollowFragment.ARG_POSITION, position + 1)
+            putString(FollowFragment.ARG_USERNAME, username)
         }
-        return fragment as Fragment
+        return fragment
     }
-
-    override fun getPageTitle(position: Int): CharSequence? {
-        return mCtx.resources.getString(TAB_TITLES(position))
+    override fun getItemCount(): Int {
+        return 2
     }
 }

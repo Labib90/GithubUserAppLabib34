@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.room.util.query
 import com.example.githubuserapplabib.api.ClientRetrofit
+import com.example.githubuserapplabib.detail.UserDetailViewModel
 import com.example.githubuserapplabib.model.ResponseUser
 import com.example.githubuserapplabib.model.User
 import retrofit2.Call
@@ -14,14 +15,15 @@ import retrofit2.Response
 import retrofit2.Retrofit
 
 class MainViewModel : ViewModel() {
-    val listUsers = MutableLiveData<ArrayList<User>>()
-
-    fun getSearchUsers(): LiveData<ArrayList<User>> {
-        return listUsers
+    private val _listUsers = MutableLiveData<ArrayList<User>>()
+    val listUsers : LiveData<ArrayList<User>> = _listUsers
+    init {
+        setSearchUsers(USERNAME)
     }
 
+
     fun setSearchUsers(query: String){
-            ClientRetrofit.apiInstance
+            ClientRetrofit.getApiService()
                 .getSearchUsers(query)
                 .enqueue(object : Callback<ResponseUser> {
                     override fun onResponse(
@@ -29,7 +31,7 @@ class MainViewModel : ViewModel() {
                         response: Response<ResponseUser>
                     ) {
                         if (response.isSuccessful){
-                            listUsers.postValue(response.body()?.items)
+                            _listUsers.postValue(response.body()?.items)
                         }
                     }
 
@@ -38,6 +40,8 @@ class MainViewModel : ViewModel() {
                     }
                 })
         }
-
+    companion object{
+        private const val USERNAME = "Labib"
+    }
 
 }

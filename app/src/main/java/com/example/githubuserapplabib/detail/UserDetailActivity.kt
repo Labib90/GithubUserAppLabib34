@@ -3,8 +3,10 @@ package com.example.githubuserapplabib.detail
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.githubuserapplabib.databinding.ActivityUserDetailBinding
+import com.google.android.material.tabs.TabLayoutMediator
 
 class UserDetailActivity : AppCompatActivity() {
     companion object{
@@ -15,12 +17,13 @@ class UserDetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityUserDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         val username = intent.getStringExtra(EXTRA_USERNAME)
         viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(UserDetailViewModel::class.java)
         viewModel.setUserDetail(username)
-        viewModel.getUserDetail().observe(this, {
+        viewModel.user.observe(this, {
             if(it != null){
                 binding.apply{
                     tvName.text = it.name
@@ -37,10 +40,12 @@ class UserDetailActivity : AppCompatActivity() {
                 }
             }
         })
-        val sectionPagerAdapter = SectionPagerAdapter( mCtx: this, supportFragmentManager)
-        binding.apply {
-            viewPager.adapter = sectionPagerAdapter
-            tabs.setupWithViewPager(viewPager)
-        }
+        val sectionsPagerAdapter = SectionsPagerAdapter(this)
+        sectionsPagerAdapter.username = username.toString()
+        viewPager.adapter = sectionsPagerAdapter
+        TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
+            tab.text = resources.getString(TAB_TITLES[position])
+        }.attach()
+
     }
 }
