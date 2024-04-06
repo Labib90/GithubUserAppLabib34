@@ -15,7 +15,7 @@ interface Api {
         @Query("q") query: String
     ): Call<ResponseUser>
 
-    @GET("user/{username}")
+    @GET("users/{username}")
     fun getUserDetail(
         @Path("username") username: String?
     ): Call<ResponseUserDetail>
