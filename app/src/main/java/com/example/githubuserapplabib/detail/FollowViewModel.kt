@@ -1,0 +1,63 @@
+package com.example.githubuserapplabib.detail
+
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import com.example.githubuserapplabib.api.ClientRetrofit
+import com.example.githubuserapplabib.model.ResponseUser
+import com.example.githubuserapplabib.model.User
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+
+class FollowViewModel : ViewModel() {
+    private val _listFollow = MutableLiveData<java.util.ArrayList<User>>()
+    val listFollow : LiveData<java.util.ArrayList<User>> = _listFollow
+
+
+
+    fun getFollowers(query: String){
+        ClientRetrofit.getApiService()
+            .getFollowers(query)
+            .enqueue(object : Callback<java.util.ArrayList<User>> {
+                override fun onResponse(
+                    call: Call<java.util.ArrayList<User>>,
+                    response: Response<java.util.ArrayList<User>>
+                ) {
+                   if(response != null){
+                       _listFollow.value = response.body()
+                   }
+                }
+
+                override fun onFailure(call: Call<java.util.ArrayList<User>>, t: Throwable) {
+                    TODO("Not yet implemented")
+                }
+
+            })
+    }
+
+    fun getFollowing(query: String){
+        ClientRetrofit.getApiService()
+            .getFollowing(query)
+            .enqueue(object : Callback<java.util.ArrayList<User>> {
+                override fun onResponse(
+                    call: Call<java.util.ArrayList<User>>,
+                    response: Response<java.util.ArrayList<User>>
+                ) {
+                    if(response != null){
+                        _listFollow.value = response.body()
+                    }
+                }
+
+                override fun onFailure(call: Call<java.util.ArrayList<User>>, t: Throwable) {
+                    TODO("Not yet implemented")
+                }
+
+            })
+    }
+    companion object{
+        private const val USERNAME = "Labib"
+    }
+}
+
