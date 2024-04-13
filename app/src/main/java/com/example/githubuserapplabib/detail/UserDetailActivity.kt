@@ -2,6 +2,7 @@ package com.example.githubuserapplabib.detail
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
@@ -34,6 +35,9 @@ class UserDetailActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(UserDetailViewModel::class.java)
         viewModel.setUserDetail(username)
+        viewModel.isLoading.observe(this){
+            showLoading(it)
+        }
         viewModel.user.observe(this, {
             if(it != null){
                 binding.apply{
@@ -63,5 +67,9 @@ class UserDetailActivity : AppCompatActivity() {
         }.attach()
 
     }
-}
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+    }}
+
+
 

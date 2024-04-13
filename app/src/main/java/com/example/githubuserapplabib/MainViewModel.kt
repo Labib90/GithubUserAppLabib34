@@ -17,6 +17,7 @@ import retrofit2.Retrofit
 class MainViewModel : ViewModel() {
     private val _listUsers = MutableLiveData<ArrayList<User>>()
     val listUsers : LiveData<ArrayList<User>> = _listUsers
+
     init {
         setSearchUsers(USERNAME)
     }

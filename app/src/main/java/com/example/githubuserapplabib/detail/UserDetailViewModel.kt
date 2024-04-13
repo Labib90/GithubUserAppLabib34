@@ -14,7 +14,11 @@ class UserDetailViewModel : ViewModel(){
     private val _user = MutableLiveData<ResponseUserDetail>()
     val user:LiveData<ResponseUserDetail> = _user
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
+
     fun setUserDetail(username: String?){
+        _isLoading.value = true
         ClientRetrofit.getApiService()
             .getUserDetail(username)
             .enqueue(object: Callback<ResponseUserDetail>{
@@ -22,12 +26,14 @@ class UserDetailViewModel : ViewModel(){
                     call: Call<ResponseUserDetail>,
                     response: Response<ResponseUserDetail>
                 ) {
+                    _isLoading.value = false
                     if( response.isSuccessful){
                         _user.postValue(response.body())
                     }
                 }
 
                 override fun onFailure(call: Call<ResponseUserDetail>, t: Throwable) {
+                    _isLoading.value = false
                     Log.d("Failure", t.message.toString())
                 }
 

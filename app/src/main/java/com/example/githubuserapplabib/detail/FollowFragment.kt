@@ -51,7 +51,9 @@ class FollowFragment : Fragment() {
             this,
             ViewModelProvider.NewInstanceFactory()
         ).get(FollowViewModel::class.java)
-
+        viewModel.isLoading.observe(viewLifecycleOwner, {isLoading ->
+            showLoading(isLoading)
+        })
         viewModel.listFollow.observe(viewLifecycleOwner){
         it?.let { userData ->
             setGithubData(userData)
@@ -83,7 +85,9 @@ class FollowFragment : Fragment() {
         adapter.setList(item)
         binding.rvFollowing.adapter = adapter
     }
-
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressBarFollow.visibility = if (isLoading) View.VISIBLE else View.GONE
+    }
 
     companion object {
         const val ARG_POSITION = "arg_position"
