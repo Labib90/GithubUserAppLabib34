@@ -11,10 +11,15 @@ import com.example.githubuserapplabib.R
 import com.example.githubuserapplabib.databinding.ActivityUserDetailBinding
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class UserDetailActivity : AppCompatActivity() {
     companion object{
         const val EXTRA_USERNAME = "extra_username"
+        const val EXTRA_ID = "extra_id"
         val TAB_TITLES = intArrayOf(
             R.string.tab_1,
             R.string.tab_2
@@ -29,11 +34,12 @@ class UserDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val username = intent.getStringExtra(EXTRA_USERNAME)
+        val id = intent.getIntExtra(EXTRA_ID, 0)
         val bundle = Bundle()
         bundle.putString(EXTRA_USERNAME, username)
 
 
-        viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(UserDetailViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(UserDetailViewModel::class.java)
         viewModel.setUserDetail(username)
         viewModel.isLoading.observe(this){
             showLoading(it)
@@ -55,6 +61,36 @@ class UserDetailActivity : AppCompatActivity() {
                 }
             }
         })
+
+        var _isChecked = false
+        CoroutineScope(Dispatchers.IO).launch {
+            val count = viewModel.checkUser(id)
+            withContext(Dispatchers.Main){
+                if(count != null){
+                    if(count>0){
+                        binding.toggleFavorite.isChecked = true
+                        _isChecked = true
+                    } else{
+                        binding.toggleFavorite.isChecked = false
+                        _isChecked = false
+
+                    }
+                }
+            }
+        }
+
+        binding.toggleFavorite.setOnClickListener {
+            _isChecked = !_isChecked
+            if (_isChecked){
+                if (username != null) {
+                    viewModel.addToFavorite(username, id)
+                }
+            } else {
+                viewModel.removeFromFavorite(id)
+            }
+            binding.toggleFavorite.isChecked = _isChecked
+        }
+
         val sectionsPagerAdapter = SectionsPagerAdapter(this)
         if (username != null) {
             sectionsPagerAdapter.username = username
