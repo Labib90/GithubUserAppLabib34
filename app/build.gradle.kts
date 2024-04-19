@@ -19,7 +19,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "BASE_URL", "\"https://api.github.com\"")
-        buildConfigField("String", "API_KEY", "\"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\"")
+        buildConfigField("String", "API_KEY", "\"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\"")
     }
 
     buildTypes {
@@ -69,7 +69,7 @@ dependencies {
     implementation("androidx.room:room-runtime:2.6.1")
     annotationProcessor("androidx.room:room-compiler:2.6.1")
     androidTestImplementation("androidx.room:room-testing:2.6.1")
-    implementation("androidx.room:room-ktx:2.6.1")
+//    implementation("androidx.room:room-ktx:2.6.1")
     ksp("androidx.room:room-compiler:2.6.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.0")

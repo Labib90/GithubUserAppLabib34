@@ -18,12 +18,13 @@ class MainViewModel : ViewModel() {
     private val _listUsers = MutableLiveData<ArrayList<User>>()
     val listUsers : LiveData<ArrayList<User>> = _listUsers
 
-    init {
-        setSearchUsers(USERNAME)
-    }
+//    init {
+//        setSearchUsers(USERNAME)
+//    }
 
 
     fun setSearchUsers(query: String){
+            Log.d("ViewModel", query)
             ClientRetrofit.getApiService()
                 .getSearchUsers(query)
                 .enqueue(object : Callback<ResponseUser> {
@@ -32,7 +33,7 @@ class MainViewModel : ViewModel() {
                         response: Response<ResponseUser>
                     ) {
                         if (response.isSuccessful){
-                            _listUsers.postValue(response.body()?.items)
+                            _listUsers.value = response.body()?.items
                         }
                     }
 
@@ -41,8 +42,8 @@ class MainViewModel : ViewModel() {
                     }
                 })
         }
-    companion object{
-        private const val USERNAME = "Labib"
-    }
+//    companion object{
+//        private const val USERNAME = ""
+//    }
 
 }

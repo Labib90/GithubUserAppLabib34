@@ -20,6 +20,7 @@ class UserDetailActivity : AppCompatActivity() {
     companion object{
         const val EXTRA_USERNAME = "extra_username"
         const val EXTRA_ID = "extra_id"
+        const val EXTRA_URL = "extra_url"
         val TAB_TITLES = intArrayOf(
             R.string.tab_1,
             R.string.tab_2
@@ -35,6 +36,7 @@ class UserDetailActivity : AppCompatActivity() {
 
         val username = intent.getStringExtra(EXTRA_USERNAME)
         val id = intent.getIntExtra(EXTRA_ID, 0)
+        val avatarUrl = intent.getStringExtra(EXTRA_URL)
         val bundle = Bundle()
         bundle.putString(EXTRA_USERNAME, username)
 
@@ -83,7 +85,7 @@ class UserDetailActivity : AppCompatActivity() {
             _isChecked = !_isChecked
             if (_isChecked){
                 if (username != null) {
-                    viewModel.addToFavorite(username, id)
+                    viewModel.addToFavorite(username, id, avatarUrl!!)
                 }
             } else {
                 viewModel.removeFromFavorite(id)
