@@ -1,5 +1,6 @@
 package com.example.githubuserapplabib
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,12 +9,23 @@ import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.githubuserapplabib.databinding.ActivityMainBinding
 import com.example.githubuserapplabib.detail.UserDetailActivity
 import com.example.githubuserapplabib.favorite.ActivityFavorite
 import com.example.githubuserapplabib.model.User
+import com.example.githubuserapplabib.setting.SettingActivity
+import com.example.githubuserapplabib.setting.SettingPreferences
+import com.example.githubuserapplabib.setting.dataStore
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,10 +33,26 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: MainViewModel
     private lateinit var adapter: UserAdapter
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val pref = SettingPreferences.getInstance(application.dataStore)
+        val SettingViewModel = ViewModelProvider(this, ViewModelFactory(pref)).get(
+            MainViewModel::class.java
+        )
+        SettingViewModel.getThemeSettings().observe(this) { isDarkModeActive: Boolean ->
+            if (isDarkModeActive) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
+            }
+        }
 
         adapter = UserAdapter()
         adapter.notifyDataSetChanged()
@@ -73,6 +101,10 @@ class MainActivity : AppCompatActivity() {
 
     }
     private fun searchUser(){
+        val pref = SettingPreferences.getInstance(application.dataStore)
+        val viewModel = ViewModelProvider(this, ViewModelFactory(pref)).get(
+            MainViewModel::class.java
+        )
         binding.apply{
             val query = etQuery.text.toString()
             if(query.isEmpty()) return
@@ -99,6 +131,11 @@ class MainActivity : AppCompatActivity() {
         when(item.itemId){
             R.id.favorite_menu -> {
                 Intent(this, ActivityFavorite::class.java).also{
+                    startActivity(it)
+                }
+            }
+            R.id.setting ->{
+                Intent(this, SettingActivity::class.java).also {
                     startActivity(it)
                 }
             }
